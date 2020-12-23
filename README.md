@@ -188,6 +188,7 @@
           }
       }
       ```
+---
 
   * **Range query :** Es un query en formato consulta que se utiliza para busquedas de tipo fecha o numero. 
 
@@ -220,13 +221,13 @@
           |h o H|horas|
           |m|minutos|
           |s|segundos|
-
+---
 
 ## Busquedas combinadas.
 
 * Para utilizar busquedas combinadas se usa la funcion `"BOOL QUERY"`, esta funcion cuenta con las siguientes clausulas. `"MUST, SHOULD & FILTER"`.
   
-  * `"must :"` Restringe la busqueda dejando como obligatorio el retorno de un valor.
+  * `"must :"` Restringe la busqueda dejando como obligatorio el retorno de un valor & `"filter :"` Perminte hacer filtros por diferentes rangos.
     ```JSON
     {
         "query": {
@@ -286,34 +287,360 @@
             }
         }
     }
-    ```
+---
 
-  * `"filter :"` Perminte hacer filtros por diferentes rangos.
-    ```JSON
-    ```
-    
+## Maping 
+* _`Que es Mapping :`_ Es el esquema donde se define la estructura y tipo de datos que contiene el indice. Para un acceso mas optimo es importante la definicion de estos esquemas. Estos son 3 variantes a tener en cuenta para una definición de maping.
+  * Nombre de los campos.
+  * Tipos de datos de los campos.
+  * Como los campos tienen que guardar los datos.
 
+  - Ejemplo: 
+    - ```BASH curl -i -H "Accept: application/json" -H "Content-Type: application/json" -X GET http://localhost:9200/restaurantes/_search```
 
+        ```JSON
+        {
+        "restaurantes": {
+                "mappings": {
+                    "properties": {
+                        "DESCRIPCION": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "DIRECCION": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "ESPECIALIDAD": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "FECHA_MODIFICACION": {
+                            "type": "date"
+                        },
+                        "HORARIO": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "ID": {
+                            "type": "long"
+                        },
+                        "LATITUD": {
+                            "type": "float"
+                        },
+                        "LONGITUD": {
+                            "type": "float"
+                        },
+                        "NOMBRE": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "POIS": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "PRECIO": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "TELEFONO": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "WEB": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        },
+                        "uri": {
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 256
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        ```
+* _`Modificando un Mapping :`_ Los mapping sol se pueden modificar cuando el cambio es un campo nuevo a ingresar en la estructura del mapping. Para modifcar un campo existente seria necesario eliminar el indice.
+---
 
-        
+## Tipos de Datos.
 
+* En Elastic se manejan los siguientes tipos de datos mas comunes.
+  
+  * _`text :`_ Son campos de tipo texto.
+  * _`keywords :`_ Son campos de tipo valor string exactos
+  * _`fechas (date) :`_ Son campos de formato tipo fecha
+  * _`enteros byte, short, int, log :`_ Son campos de formato tipo numerico
+  * _`floats :`_ Son campos de formato tipo numerico con valor flotante
+  * _`boolean :`_ Son campos de tipo verdadero o falso
+  * _`ip :`_ Son campos de formato para direcciones ip en formato ipv4 o ipv6
+---
 
+## Analizadores de texto.
 
+  * Un analizador de texto es la forma en que elasticsearch por debajo interpreta los datos, un ejemplo es cuando aplica un analizar de conversion todo a minuscula para optimizar y obtener un mejor score.
+  * Otro dato interesante es que un ananlizador de texto en un campo tipo `keyword` no funcionaria dado el origen de este campo que son valores exactos y difiere `MAYUSCULAS` de `minusculas`. 
+  * Los analizadores parten el texto en tokens.
+  * los tokens son indexados a un unico documento al ID.
 
-    
+    <p align="center">
+    <img src ="./images/analizadores.PNG">
+    </p>
 
+### Probando un analizador de texto.
 
+* Realizando una petición `POST` con `localhost:9200/_analyze`
+* En el cuerpo del body se ingresa en la opcion `text` el texto a analizar y en la opcion `analyzer` el tipo de analizador a utilizar.
+  
+   ```JSON
+   {
+    "text": "my favorite prove",
+    "analyzer" : "stop"
+    }
+  ```
 
+* Se genera el siguiente resultado en formato JSON.
+  ```JSON
+    {
+        "tokens": [
+            {
+                "token": "my",
+                "start_offset": 0,
+                "end_offset": 2,
+                "type": "word",
+                "position": 0
+            },
+            {
+                "token": "favorite",
+                "start_offset": 3,
+                "end_offset": 11,
+                "type": "word",
+                "position": 1
+            },
+            {
+                "token": "prove",
+                "start_offset": 12,
+                "end_offset": 17,
+                "type": "word",
+                "position": 2
+            }
+        ]
+    }
 
+  ```
 
+### Personalizando un analizador.
 
+* Se crea el siguiente cuerpo donde la primera parte se crea una lista de tareas con palabras para borrar, en la segunda parte se define el analizador que aplicara al filtro creado.
+  
+  ```JSON
+  {
+    "settings":{
+            "analysis": {
+                "filter": {
+                "spanish_stop":{
+                        "type":"stop",
+                        "stopwords":["en", "mi", "de", "contra", "para", "con"]
+                    }
+                },
+                "analyzer":{
+                    "my_analizador": {
+                        "type":"custom",
+                        "char_filter":[],
+                        "tokenizer":"standard",
+                        "filter":["lowercase", "spanish_stop"]
+                    }   
+                }
+            }
+        }
+    }
 
+* Para consultar el analizador creado, se envia una petición `GET` con `localhost:9200/indice` y se obtiene el siguiente resultado.
+
+```JSON
+{
+    "restaurantes_1": {
+        "aliases": {},
+        "mappings": {},
+        "settings": {
+            "index": {
+                "routing": {
+                    "allocation": {
+                        "include": {
+                            "_tier_preference": "data_content"
+                        }
+                    }
+                },
+                "number_of_shards": "1",
+                "provided_name": "restaurantes_1",
+                "creation_date": "1608695948781",
+                "analysis": {
+                    "filter": {
+                        "spanish_stop": {
+                            "type": "stop",
+                            "stopwords": [
+                                "en",
+                                "mi",
+                                "de",
+                                "contra",
+                                "para",
+                                "con"
+                            ]
+                        }
+                    },
+                    "analyzer": {
+                        "my_analizador": {
+                            "filter": [
+                                "lowercase",
+                                "spanish_stop"
+                            ],
+                            "char_filter": [],
+                            "type": "custom",
+                            "tokenizer": "standard"
+                        }
+                    }
+                },
+                "number_of_replicas": "1",
+                "uuid": "4478yGwjTRijm0WiEjge8A",
+                "version": {
+                    "created": "7100099"
+                }
+            }
+        }
+    }
+}
+```
+* Para el ejemplo anterior se observa que el indice `restaurantes_1` cuenta con analysis, en el campo `stopwords` aparecen las palabras seleccionads y en el campo `my_analizador` los tipos de analizadores seleccionados.
+  
+* Para probar el analizador, se envia una petición `POST` con `localhost:9200/indice/_analyze` en el cuerpo se pasan los siguientes valores.
+
+```JSON
+    {
+        "text": "el mensaje en contra de la prueba anterior",
+        "analyzer": "my_analizador"
+    }
+```
+
+* El resultado es el siguiente:
+
+```JSON
+    {
+        "tokens": [
+            {
+                "token": "el",
+                "start_offset": 0,
+                "end_offset": 2,
+                "type": "<ALPHANUM>",
+                "position": 0
+            },
+            {
+                "token": "mensaje",
+                "start_offset": 3,
+                "end_offset": 10,
+                "type": "<ALPHANUM>",
+                "position": 1
+            },
+            {
+                "token": "la",
+                "start_offset": 24,
+                "end_offset": 26,
+                "type": "<ALPHANUM>",
+                "position": 5
+            },
+            {
+                "token": "prueba",
+                "start_offset": 27,
+                "end_offset": 33,
+                "type": "<ALPHANUM>",
+                "position": 6
+            },
+            {
+                "token": "anterior",
+                "start_offset": 34,
+                "end_offset": 42,
+                "type": "<ALPHANUM>",
+                "position": 7
+            }
+        ]
+    }
+```
+
+  y se obtiene el siguiente resultado.
+
+---
 
 # Recopilando comandos de consulta.
 
-+ http://localhost:9200/
-+ http://localhost:9200/
-+ http://localhost:9200/
-+ http://localhost:9200/
-+ http://localhost:9200/
++ Consultar un indice.
+  + GET localhost:9200/`indice`/_search
 
++ Consultar el documento de un indice.
+  + localhost:9200/`indice`/_doc/`_id`
+  
++ Consultar el maping de indice.
+  + GET localhost:9200/`indice`/_mapping
+
++ Eliminar un indice.
+  + localhost:9200/`indice`/_mapping
+---
+
+
+
+
+Fuentes.
+* OpenWebinars Curso Elasticsearch y Kibana para desarrolladores.
+* OpenWebinars Curso 
+
+
+Author - Oscar Giovanni Bocanegra
+https://www.linkedin.com/in/oscarbocanegra/
