@@ -11,6 +11,7 @@
 2. [Kibana](#Kibana)
 3. [Logstash](#Logstash)
 4. [Beats](#Beats)
+5. [X-pack](#xpack)
 ---
 
 # Elasticsearch
@@ -53,13 +54,6 @@
     * Comunicaciones Elasticsearch.
         + Puerto 9200
         + Puerto 9300 
----
-## Desplegando Kibana
-
-* Para descargar kibana se hace desde la url del producto que es la siguiente:
-* Configuracion kibana.yml
-    + Configurando seguridad con xpack.security.enabled
-        + Activando elasticsearch-setup-passwords interactive
 ---
 
 ## CRUD en Elasticsearch.
@@ -615,23 +609,55 @@
     }
 ```
 
-  y se obtiene el siguiente resultado.
+## Que es Kibana
+
+* Kibana es el framework que permite visualizar los datos de elasticsearch en forma amigable, tiene diversas funcionalidades como.
+  
+  * Crear objetos de los indices, conocido como `Index Pattern`
+  * Crear visualizaciones.
+  * Crear alertamientos.
+  * Generar Dashboards unificando las visualizaciones.
+  * Generar comportamientos de Machinelearning.
+
+---
+## Desplegando Kibana
+
+* Para descargar kibana se hace desde la url del producto que es la siguiente:
+* Configuracion kibana.yml
+    + Configurando seguridad con xpack.security.enabled
+        + Activando elasticsearch-setup-passwords interactive
+---
 
 ---
 
 # Recopilando comandos de consulta.
 
 + Consultar un indice.
-  + GET localhost:9200/`indice`/_search
+  + `GET` localhost:9200/`indice`/_search
 
 + Consultar el documento de un indice.
-  + localhost:9200/`indice`/_doc/`_id`
+  + `GET` localhost:9200/`indice`/_doc/`_id`
   
 + Consultar el maping de indice.
-  + GET localhost:9200/`indice`/_mapping
+  + `GET` localhost:9200/`indice`/_mapping
 
 + Eliminar un indice.
-  + localhost:9200/`indice`/_mapping
+  + `DELETE` localhost:9200/`indice`/_mapping
+
++ Consultar el estado de un cluster..
+  + `GET` localhost:9200/`_cluster`/`health?pretty`
+
++ Consultar estadisticas del cluster (# de shards, almacenamiento, uso de memoria, Informacion de nodos(ccantidad, roles,  os, jvm, memoria, cpu, plugins instalados)).
+  + `GET` localhost:9200/`_cluster`/`stats?humman&pretty`
+
++ Consultar informacion de los Nodos.
+  + `GET` localhost:9200/`_nodes`?pretty`
+
++ Consultar Estadistica de los indies.
+  + `GET` localhost:9200/`_stats`?pretty`
+
+
+
 ---
 
 
@@ -644,3 +670,7 @@ Fuentes.
 
 Author - Oscar Giovanni Bocanegra
 https://www.linkedin.com/in/oscarbocanegra/
+
+
+
+https://github.com/OpenWebinarsNet/curso_ElasticSearch
