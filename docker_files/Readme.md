@@ -15,4 +15,7 @@
 - Copiar archivos desde mi terminal al contenedor.
   - **docker cp {ruta_origen_local}/{archivo} {contenedor}:{ruta_destino}/nombre_archivo** Copiando Archivos
   - **docker cp {contenedor}:{ruta_contenedor}/nombre_archivo {ruta_origen_local}** Copiando Carpetas
-  - 
+  - Tag para nueva imagen.
+    - **docker tag {image}:{tag} {user}/{image}:{tag}**
+  - Subir imagen al repositorio.
+    - **docker push {user}/{image}:{tag}**
