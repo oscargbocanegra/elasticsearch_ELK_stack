@@ -18,7 +18,7 @@
 
 * Es una base de datos de busqueda distribuida en formato no relacional.
 * Contiene una api que permite su consumo mediante protocolos  http.
-* Elasticsearch usa una puntuacion (score) para la relevancia en la busqueda.
+* Usa una puntuacion (score) para la relevancia en la busqueda.
 * Los principales usos son:
     * Analisis de Logs.
     * Metricas.
@@ -28,8 +28,10 @@
 
  ## Arquitetura Elasticsearch.
 
- * Su arquitectura consta de los siguientes componentes:
-    * Beats para realizar el envio de informacion a los diferentes servidores.
+ * Su arquitectura principal consta de los siguientes componentes:
+        <p align="center"> <img src ="./images/arquitectura-elk.png">
+        </p>
+    * Una familia de beats para realizar el envio de informacion a los diferentes servidores.
     * Logstahs como un componente que realiza los procesos ETL.
     * Elasticsearch Como base de datos no relacional, escalable.
     * Kibana Es un componente que permite realizar visualizar los datos y realizar procesos de analitica.
