@@ -661,18 +661,13 @@
 
 
 ---
+Author
+- Oscar Giovanni Bocanegra
+- https://www.linkedin.com/in/oscarbocanegra/
 
-
-
+___
 
 Fuentes.
-* OpenWebinars Curso Elasticsearch y Kibana para desarrolladores.
-* OpenWebinars Curso 
-
-
-Author - Oscar Giovanni Bocanegra
-https://www.linkedin.com/in/oscarbocanegra/
-
-
-
-https://github.com/OpenWebinarsNet/curso_ElasticSearch
+- [OpenWebinars](https://openwebinars.net/)
+    - Curso Elasticsearch y Kibana para desarrolladores.
+    - https://github.com/OpenWebinarsNet/curso_ElasticSearch
