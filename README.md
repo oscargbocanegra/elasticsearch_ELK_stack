@@ -666,7 +666,6 @@ Author
 - https://www.linkedin.com/in/oscarbocanegra/
 
 ___
-
 Fuentes.
 - [OpenWebinars](https://openwebinars.net/)
     - Curso Elasticsearch y Kibana para desarrolladores.
