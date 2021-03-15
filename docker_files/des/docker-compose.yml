@@ -1,4 +1,4 @@
-version: '2.2'
+version: '3.3'
 services:
   elastic01:
     env_file: .env
@@ -29,6 +29,7 @@ services:
       - elastic
 
   elastic02:
+    env_file: .env
     image: "docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}"
     container_name: elastic02
     environment:
@@ -54,6 +55,7 @@ services:
       - elastic
 
   kibana01:
+    env_file: .env
     image: "docker.elastic.co/kibana/kibana:${ELK_VERSION}"
     container_name: kibana01
     ports:
