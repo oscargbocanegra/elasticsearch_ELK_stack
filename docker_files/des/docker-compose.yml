@@ -1,21 +1,25 @@
 version: '2.2'
 services:
-  es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
-    container_name: es01
+  elastic01:
+    env_file: .env
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}"
+    container_name: elastic-01
     environment:
-      - node.name=es01
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es02
-      - cluster.initial_master_nodes=es01,es02
+      - node.name=elastic-01
+      - cluster.name=elk-docker-cluster
+      - node.master=true
+      - node.data=false
+      - node.ingest=true
+      - discovery.seed_hosts=elastic-02
+      - cluster.initial_master_nodes=elastic-01,elastic-02
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms${ELASTIC_NODE01_HEAP} -Xmx${ELASTIC_NODE01_HEAP}"
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.monitoring.enabled=true
       - xpack.monitoring.collection.enabled=true
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
-      - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=elastic
     ulimits:
       memlock:
         soft: -1
@@ -27,22 +31,22 @@ services:
     networks:
       - elastic
 
-  es02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
-    container_name: es02
+  elastic02:
+    image: "docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION}"
+    container_name: elastic-02
     environment:
-      - node.name=es02
-      - cluster.name=es-docker-cluster
-      - discovery.seed_hosts=es01
-      - cluster.initial_master_nodes=es01,es02
+      - node.name=elastic-02
+      - cluster.name=elk-docker-cluster
+      - discovery.seed_hosts=elastic-01
+      - cluster.initial_master_nodes=elastic-01,elastic-02
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms${ELASTIC_NODE01_HEAP} -Xmx${ELASTIC_NODE01_HEAP}"
+      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.monitoring.enabled=true
       - xpack.monitoring.collection.enabled=true
       - xpack.license.self_generated.type=basic
       - xpack.security.enabled=true
-      - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=elastic
     ulimits:
       memlock:
         soft: -1
@@ -53,15 +57,15 @@ services:
       - elastic
 
   kib01:
-    image: docker.elastic.co/kibana/kibana:7.11.0
-    container_name: kib01
+    image: "docker.elastic.co/kibana/kibana:${ELK_VERSION}"
+    container_name: kibana01
     ports:
       - 5601:5601
     environment:
-      - ELASTICSEARCH_URL=http://es01:9200
-      - ELASTICSEARCH_HOSTS=["http://es01:9200","http://es02:9200"]
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=elastic
+      - ELASTICSEARCH_URL=http://elastic-01:9200
+      - ELASTICSEARCH_HOSTS=["http://elastic-01:9200","http://elastic-02:9200"]
+      - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - XPACK_GRAPH_ENABLED=true
       - XPACK_WATCHER_ENABLED=true
       - XPACK_MONITORING_ENABLED=true
