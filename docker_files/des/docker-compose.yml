@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.7'
 services:
   elastic01:
     env_file: .env
@@ -6,23 +6,22 @@ services:
     container_name: elastic01
     environment:
       - node.name=elastic01
-      - cluster.name=es-docker-cluster
+      - cluster.name=elastic-cluster
       - discovery.seed_hosts=elastic02
       - cluster.initial_master_nodes=elastic01,elastic02
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ELASTIC_NODE01_HEAP} -Xmx${ELASTIC_NODE01_HEAP}"
-      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - xpack.monitoring.enabled=true
-      - xpack.monitoring.collection.enabled=true
-      - xpack.license.self_generated.type=basic
-      - xpack.security.enabled=true
+      #- ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      #- ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      #- xpack.security.enabled=true
+      #- xpack.security.transport.ssl.enabled=true
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - data01:/usr/share/elasticsearch/data
+      - logs01:/usr/share/elasticsearch/logs
     ports:
       - 9200:9200
     networks:
@@ -34,23 +33,22 @@ services:
     container_name: elastic02
     environment:
       - node.name=elastic02
-      - cluster.name=es-docker-cluster
+      - cluster.name=elastic-cluster
       - discovery.seed_hosts=elastic01
       - cluster.initial_master_nodes=elastic01,elastic02
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms${ELASTIC_NODE01_HEAP} -Xmx${ELASTIC_NODE01_HEAP}"
-      - ELASTIC_USERNAME=${ELASTIC_USERNAME}
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - xpack.monitoring.enabled=true
-      - xpack.monitoring.collection.enabled=true
-      - xpack.license.self_generated.type=basic
-      - xpack.security.enabled=true
+      #- ELASTIC_USERNAME=${ELASTIC_USERNAME}
+      #- ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      #- xpack.security.enabled=true
+      #- xpack.security.transport.ssl.enabled=true
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - data02:/usr/share/elasticsearch/data
+      - logs02:/usr/share/elasticsearch/logs
     networks:
       - elastic
 
@@ -65,11 +63,9 @@ services:
       - ELASTICSEARCH_HOSTS=["http://elastic01:9200","http://elastic02:9200"]
       - ELASTICSEARCH_USERNAME=${ELASTIC_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
-      - XPACK_GRAPH_ENABLED=true
-      - XPACK_WATCHER_ENABLED=true
-      - XPACK_MONITORING_ENABLED=true
-      - XPACK_MONITORING_UI_CONTAINER_ELASTICSEARCH_ENABLED=true
-      - XPACK_MONITORING_KIBANA_COLLECTION_ENABLED=true
+      #- SERVER_SSL_ENABLED=true
+      #- XPACK_GRAPH_ENABLED=true
+      #- XPACK_WATCHER_ENABLED=true
     networks:
       - elastic
 
@@ -78,7 +74,12 @@ volumes:
     driver: local
   data02:
     driver: local
+  logs01:
+    driver: local
+  logs02:
+    driver: local
 
 networks:
   elastic:
     driver: bridge
+  
